@@ -48,7 +48,7 @@
 
 - Challenge ID: `day13-k4-observability-v1` (incident được release: `rag_slow`, feature ảnh hưởng: `monitoring`).
 - Triệu chứng từ metrics: Sau 5 request challenge chạy đồng thời, traffic = 5; P50 = 3457ms, P95/P99 = 3511ms. P95 vượt ngưỡng challenge 2000ms và ngưỡng alert latency 3000ms; error breakdown rỗng, nên đây là degradation về latency chứ không phải request failure.
-- Trace liên quan: Lọc Langfuse bằng `session_id=k4-challenge-s02` rồi lưu Trace ID và waterfall vào evidence trước khi nộp. Code đã tạo tool span `retrieval` để waterfall khoanh vùng thời gian RAG mà không capture input/output.
+- Trace liên quan: Trace ID `c709ac1e15ee347068438f5464d7bb13`, session `k4-challenge-s02`, latency hiển thị 3.32s trên Langfuse. Waterfall được lưu tại `submission/evidence/challenge_waterfall.png`. Code đã tạo tool span `retrieval` để các trace chạy sau đó khoanh vùng thời gian RAG mà không capture input/output.
 - Log line/correlation ID liên quan: `req-2b31b06b` — `request_received` lúc `2026-08-11T09:49:46.326230Z` và `response_sent` lúc `2026-08-11T09:49:49.732682Z`, `latency_ms=3403`, cùng session `k4-challenge-s02`. Chi tiết được lưu tại `submission/evidence/challenge-investigation.md`.
 - Root cause: Incident chính thức `rag_slow` làm `app.mock_rag.retrieve()` sleep 2.5 giây trước khi trả documents. Vì không có error, latency tăng đồng loạt trên 5 request challenge.
 - Fix action: Đã tắt incident qua endpoint `/incidents/rag_slow/disable`; health check xác nhận `rag_slow=false`. Thêm span `retrieval` để lần điều tra sau xác định được đoạn chậm trực tiếp trong waterfall.

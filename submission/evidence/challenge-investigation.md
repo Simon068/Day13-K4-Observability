@@ -31,6 +31,13 @@ Use correlation ID `req-2b31b06b` and session `k4-challenge-s02`:
 Both records are in the generated `data/logs.jsonl`; that runtime log remains
 ignored by Git because it can contain local execution data.
 
+## Trace evidence
+
+- Langfuse trace ID: `c709ac1e15ee347068438f5464d7bb13`
+- Session: `k4-challenge-s02`
+- Observed trace latency: 3.32 s
+- Waterfall screenshot: `submission/evidence/challenge_waterfall.png`
+
 ## Root cause, fix and prevention
 
 The released `rag_slow` incident causes `app.mock_rag.retrieve()` to sleep for
@@ -40,6 +47,5 @@ run, and `/health` confirmed `rag_slow=false`. A safe Langfuse tool span named
 the next waterfall to localize this delay without exposing prompt content.
 
 Prevention: alert on P95 latency, add a retriever timeout/circuit breaker, and
-cache stable corpus results. Before submission, open Langfuse, filter
-`session_id=k4-challenge-s02`, and save the waterfall screenshot with its exact
-trace ID next to this file.
+cache stable corpus results. The saved waterfall can be reopened in Langfuse
+using the trace ID above for further inspection.
