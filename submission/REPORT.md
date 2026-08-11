@@ -52,4 +52,7 @@ Với mỗi thành viên, ghi rõ nhiệm vụ và link commit/PR tương ứng.
 
 | Thành viên | Phần việc | Commit/PR | Điều đã học |
 |---|---|---|---|
+| Nguyễn Phú Quang - 2A202602017 | CP1 Logging/PII: Triển khai structured JSON logging, correlation ID middleware, log enrichment (user_id_hash, session_id, feature, model, env), PII redaction (email, phone VN, CCCD, credit card, passport, IP) | `app/main.py`, `app/middleware.py`, `app/logging_config.py`, `app/pii.py` | Hiểu cách dùng structlog với contextvars để propagate correlation ID xuyên suốt request lifecycle; cách thiết kế PII scrubbing processor chạy trong pipeline logging để đảm bảo không có dữ liệu nhạy cảm nào bị lộ ra file log; tầm quan trọng của việc hash user_id thay vì log trực tiếp để vừa trace được hành vi user vừa bảo vệ privacy |
+| | | | |
+| | | | |
 | | | | |
