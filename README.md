@@ -44,7 +44,7 @@ Trong lab này, Langfuse dùng cho trace và prompt versioning; nguồn chuẩn 
 5. Chạy `python scripts/validate_logs.py` để lấy baseline.
 6. Chạy `python scripts/validate_dashboard.py` để hiểu contract của dashboard.
 
-Kết quả đúng ở bước 6 phải có dòng `VALID: 6/6 required panels are present in the dashboard contract.` Lệnh này chỉ kiểm tra contract; ảnh dashboard runtime vẫn phải nộp.
+Kết quả đúng ở bước 6 phải có dòng `VALID: 6/6 panels are present in the dashboard contract.` Lệnh này chỉ kiểm tra contract; ảnh dashboard runtime vẫn phải nộp.
 
 ## Practice và challenge chính thức
 

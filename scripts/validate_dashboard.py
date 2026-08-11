@@ -110,7 +110,7 @@ def main() -> int:
         print(f"INVALID: {exc}")
         return 1
 
-    print(f"VALID: {len(REQUIRED_PANEL_IDS)}/6 required panels are present in the dashboard contract.")
+    print(f"VALID: {len(REQUIRED_PANEL_IDS)}/6 panels are present in the dashboard contract.")
     return 0
 
 
