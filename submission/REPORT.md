@@ -4,7 +4,7 @@
 
 - Tên nhóm:
 - Repository URL: https://github.com/Simon068/Day13-K4-Observability
-- Commit SHA cuối:
+- Commit SHA cuối: `63cbdb4`
 - Thành viên và vai trò:
   - Nguyễn Phú Quang — 2A202602017 — Role 1: Logging & PII (CP1).
   - Nguyễn Đại Quân — 2A202601933 — Role 2: Tracing & Prompt Versioning.
@@ -22,10 +22,11 @@
 
 ## 3. Logging và tracing
 
-- Evidence correlation ID:
-- Evidence PII redaction:
-- Evidence trace waterfall:
-- Giải thích một span đáng chú ý:
+- Evidence correlation ID: `submission/evidence/trace_list.png`
+- Evidence PII redaction: Log chứa `user_id_hash` (e.g. `f85ac825d102`) thay vì raw user ID
+- Evidence trace waterfall: Trace ID `c11ea75cc1111abc27f169b2cdded022` (`submission/evidence/waterfall_trace.png`)
+- Giải thích một span đáng chú ý: Span `run` (Generation) thực hiện xử lý prompt và sinh câu trả lời trong **0.86s**, tiêu tốn **147 tokens** với chi phí **$0.001929**. Span này đính kèm các tags định danh `claude-sonnet-4-5`, `lab`, `qa`, session ID `s1` và user ID đã được mã hóa PII (`f85ac825d102`).
+
 
 ## 4. Prompt versioning
 
