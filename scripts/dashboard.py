@@ -178,6 +178,8 @@ with row1[1]:
         )
         st.line_chart(per_minute)
         st.metric("Tổng request trong cửa sổ", int(requests_recv.shape[0]))
+        threshold = panel["threshold"]["value"]
+        st.caption(f"Threshold: ≥ {threshold} {panel['unit']}")
 
 # --- Panel 3: Errors ---------------------------------------------------------
 with row1[2]:
@@ -238,6 +240,7 @@ with row2[1]:
                 {"tokens_in": [total_in], "tokens_out": [total_out]}, index=["tổng"]
             )
         )
+        st.caption(f"Threshold: mỗi field ≤ {threshold:,} {panel['unit']}")
         if max(total_in, total_out) > threshold:
             st.warning(f"Một field token đang vượt threshold {threshold}")
 

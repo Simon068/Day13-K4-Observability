@@ -88,6 +88,12 @@ python scripts/validate_dashboard.py
 python -m pytest -q
 ```
 
+Dashboard local (sau khi đã chạy `pip install -r requirements.txt`):
+
+```bash
+streamlit run scripts/dashboard.py
+```
+
 API mặc định chạy tại `http://127.0.0.1:8000`; health check ở `/health`, metrics ở `/metrics`.
 
 ## Lỗi thường gặp
