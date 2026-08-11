@@ -4,7 +4,7 @@
 
 - Tên nhóm: Debugging
 - Repository URL: https://github.com/Simon068/Day13-K4-Observability
-- Commit SHA cuối: `abf3735`
+- Commit đối chiếu evidence: `b17adc4` (repository được nộp/chấm tại commit `main` mới nhất).
 - Thành viên và vai trò:
   - Nguyễn Phú Quang — 2A202602017 — Role 1: Logging & PII (CP1).
   - Nguyễn Đại Quân — 2A202601933 — Role 2: Tracing & Prompt Versioning.
@@ -33,8 +33,8 @@
 - Version/label baseline: Version 1 (`baseline`, `production`)
 - Version/label candidate: Version 2 (`candidate`)
 - Trace ID của mỗi version:
-  - Version 1 (`baseline`): Cần điền trace ID thật từ trace metadata `prompt_name=day13-chat`, `prompt_label=baseline`, `prompt_version=1`.
-  - Version 2 (`candidate`): Cần điền trace ID thật khác Version 1 từ trace metadata `prompt_name=day13-chat`, `prompt_label=candidate`, `prompt_version=2`.
+  - Version 1 (`baseline`): Trace ID `8dc7c893d2a418600e7e9f9904047d00`, session `baseline-session-01`; evidence `submission/evidence/trace_baseline_metadata.png`.
+  - Version 2 (`candidate`): Trace ID `65e356bfe5fc5ca71c7799ed27dc7be7`, session `candidate-session-02`; evidence `submission/evidence/trace_candidate_metadata.png`.
 - Bằng chứng đổi label hoặc rollback: Minh chứng tại `submission/evidence/prompt_versions.png` và `submission/evidence/prompt_rollback.png` (Ghi nhận quá trình tạo Version 2 với label `candidate`, thử nghiệm promote `production` sang v2 và rollback về v1 thành công).
 
 ## 5. Dashboard, SLO và alerts
@@ -61,7 +61,7 @@ Với mỗi thành viên, ghi rõ nhiệm vụ và link commit/PR tương ứng.
 | Thành viên | Phần việc | Commit/PR | Điều đã học |
 |---|---|---|---|
 | Nguyễn Phú Quang — 2A202602017 | Role 1 — CP1 Logging/PII: structured JSON logging, correlation ID middleware, log enrichment (`user_id_hash`, `session_id`, `feature`, `model`, `env`) và PII redaction cho email, phone VN, CCCD, credit card, passport, IP. | Commit `7c6b5b4` | Hiểu cách dùng structlog/contextvars để propagate correlation ID và PII scrubber trong logging pipeline. |
-| Nguyễn Đại Quân — 2A202601933 | Role 2 — CP2 Tracing & Prompt Versioning: Cấu hình Langfuse SDK US Cloud, đính kèm trace metadata (`prompt_name`, `prompt_label`, `prompt_version`, `prompt_source`), tạo prompt `day13-chat` Version 1 (`production`/`baseline`) và Version 2 (`candidate`), thực hiện thử nghiệm rollback label và thu thập 45 root traces. | Commit `63cbdb4` / `abf3735` | Nắm vững quy trình LLM Tracing và Prompt Lifecycle Management; cách gắn metadata phiên bản prompt vào từng trace để phục vụ audit/rollback; cách sử dụng Langfuse Waterfall Tracing để phân tích latency từng span (`retrieval` vs `generation`). |
-| Trần Tuấn Linh — 2A202601612 | Role 3 — Hoàn thiện SLO, 3 alert rules, runbook và dashboard 6 panel; xác nhận bằng dashboard validator. | Commit `CP3 eval complete` | Biết chuyển SLO thành dashboard contract có ngưỡng đo được, thiết kế alert theo symptom và viết runbook có thể thao tác. |
-| Trần Kiên — 2A202601598 | Role 4 — Chạy challenge chính thức, điều tra Metrics → Traces → Logs, bổ sung span `retrieval`, tổng hợp evidence và hoàn thiện báo cáo/demo. | Commit `update Cp4` | Biết dùng cùng một correlation ID để nối metric bất thường với log, rồi xác nhận dependency chậm bằng trace waterfall. |
-| Nguyễn Hữu Huy — 2A202601220 | Vai trò hỗ trợ — QA, Integration & Evidence: chạy full test và validators, kiểm tra log/evidence không chứa PII hoặc secret, rà soát liên kết REPORT và hỗ trợ tích hợp trước demo. | Chưa cập nhật | Chưa cập nhật |
+| Nguyễn Đại Quân — 2A202601933 | Role 2 — CP2 Tracing & Prompt Versioning: Cấu hình Langfuse SDK US Cloud, đính kèm trace metadata (`prompt_name`, `prompt_label`, `prompt_version`, `prompt_source`), tạo prompt `day13-chat` Version 1 (`production`/`baseline`) và Version 2 (`candidate`), thực hiện thử nghiệm rollback label và thu thập 45 root traces. | Commits `63cbdb4`, `abf3735`, `11977fa` | Nắm vững quy trình LLM Tracing và Prompt Lifecycle Management; cách gắn metadata phiên bản prompt vào từng trace để phục vụ audit/rollback; cách sử dụng Langfuse Waterfall Tracing để phân tích latency từng span (`retrieval` vs `generation`). |
+| Trần Tuấn Linh — 2A202601612 | Role 3 — Hoàn thiện SLO, 3 alert rules, runbook và dashboard 6 panel; xác nhận bằng dashboard validator. | Commit `0f69b0e` | Biết chuyển SLO thành dashboard contract có ngưỡng đo được, thiết kế alert theo symptom và viết runbook có thể thao tác. |
+| Trần Kiên — 2A202601598 | Role 4 — Chạy challenge chính thức, điều tra Metrics → Traces → Logs, bổ sung span `retrieval`, tổng hợp evidence và hoàn thiện báo cáo/demo. | Commits `6345954`, `b17adc4` | Biết dùng cùng một correlation ID để nối metric bất thường với log, rồi xác nhận dependency chậm bằng trace waterfall. |
+| Nguyễn Hữu Huy — 2A202601220 | Vai trò hỗ trợ — QA, Integration & Evidence: kiểm tra validators, rà soát evidence không lộ PII/secret và hỗ trợ tích hợp trước demo. | Chưa có commit/PR độc lập trong lịch sử hiện tại. | Hiểu checklist xác minh log, dashboard, evidence và cách kiểm tra Git trước khi nộp. |
