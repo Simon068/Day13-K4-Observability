@@ -15,7 +15,7 @@
 ## 2. Kết quả kỹ thuật
 
 - Điểm `validate_logs.py`: 100/100
-- Tổng số traces: 20+ traces trên Langfuse US Cloud
+- Tổng số traces: 2 traces đã có evidence trong `submission/evidence/trace_list.png`; cần tạo tối thiểu 10 traces.
 - Số PII leak còn lại: 0
 - Link/đường dẫn dashboard: https://us.cloud.langfuse.com
 
@@ -24,18 +24,18 @@
 
 - Evidence correlation ID:
 - Evidence PII redaction:
-- Evidence trace waterfall:
+- Evidence trace waterfall: `submission/evidence/waterfall_trace.png` (đã có một trace waterfall).
 - Giải thích một span đáng chú ý:
 
 ## 4. Prompt versioning
 
 - Prompt name: `day13-chat`
 - Version/label baseline: Version 1 (`baseline`, `production`)
-- Version/label candidate: Version 2 (`candidate`)
+- Version/label candidate: Chưa có evidence Version 2 (`candidate`).
 - Trace ID của mỗi version:
-  - Version 1 (`production`): `req-8a6f57b3` (Trace metadata: `prompt_name=day13-chat`, `prompt_label=production`, `prompt_version=1`)
-  - Version 2 (`candidate`): `req-6868d2c9` (Trace metadata: `prompt_name=day13-chat`, `prompt_label=candidate`, `prompt_version=2`)
-- Bằng chứng đổi label hoặc rollback: File minh chứng `submission/evidence/prompt_rollback.png` và `submission/evidence/prompt_versions.png`
+  - Trace waterfall hiện có: `c11ea75cc111abc27f169b2cdded022` trong `submission/evidence/waterfall_trace.png`.
+  - Cần bổ sung hai trace thể hiện metadata của `baseline` và `candidate`.
+- Bằng chứng đổi label hoặc rollback: `submission/evidence/image.png` chỉ ghi lại giao diện thao tác label Version 1; chưa có ảnh trạng thái sau rollback. File `prompt_rollback.png` chưa tồn tại.
 
 ## 5. Dashboard, SLO và alerts
 
@@ -61,7 +61,7 @@ Với mỗi thành viên, ghi rõ nhiệm vụ và link commit/PR tương ứng.
 | Thành viên | Phần việc | Commit/PR | Điều đã học |
 |---|---|---|---|
 | Nguyễn Phú Quang — 2A202602017 | Role 1 — CP1 Logging/PII: structured JSON logging, correlation ID middleware, log enrichment (`user_id_hash`, `session_id`, `feature`, `model`, `env`) và PII redaction cho email, phone VN, CCCD, credit card, passport, IP. | `app/main.py`, `app/middleware.py`, `app/logging_config.py`, `app/pii.py` | Hiểu cách dùng structlog/contextvars để propagate correlation ID và PII scrubber trong logging pipeline. |
-| Nguyễn Đại Quân — 2A202601933 | Role 2 — CP2 Tracing & Prompt Versioning: Cấu hình Langfuse SDK US Cloud, đính kèm trace metadata (`prompt_name`, `prompt_label`, `prompt_version`, `prompt_source`), khởi tạo prompt `day13-chat` v1 (`baseline`/`production`) và v2 (`candidate`), thực hiện test rollback label và tạo 20+ traces. | `app/tracing.py`, `app/agent.py`, `app/prompt_management.py`, `docs/TRACING_PROMPT_PLAN.md` | Nắm vững quy trình LLM Tracing và Prompt Lifecycle Management; cách gắn metadata phiên bản prompt vào từng trace để phục vụ audit/rollback; cách sử dụng Langfuse Waterfall Tracing để phân tích latency từng span (`retrieval` vs `generation`). |
+| Nguyễn Đại Quân — 2A202601933 | Role 2 — CP2 Tracing & Prompt Versioning: Đã tích hợp Langfuse SDK và metadata `prompt_name`, `prompt_label`, `prompt_version`, `prompt_source`; hiện có evidence Version 1, 2 traces và một waterfall. Cần hoàn tất Version 2/candidate, tối thiểu 10 traces và rollback có ảnh trước/sau. | `app/tracing.py`, `app/agent.py`, `app/prompt_management.py`, `docs/TRACING_PROMPT_PLAN.md` | Nắm vững quy trình LLM Tracing và Prompt Lifecycle Management; cách gắn metadata phiên bản prompt vào từng trace để phục vụ audit/rollback; cách sử dụng Langfuse Waterfall Tracing để phân tích latency từng span (`retrieval` vs `generation`). |
 | Trần Tuấn Linh — 2A202601612 | Role 3 — Hoàn thiện SLO, 3 alert rules, runbook và dashboard 6 panel; xác nhận bằng dashboard validator. | Chưa cập nhật | Chưa cập nhật |
 | Trần Kiên — 2A202601598 | Role 4 — Điều tra incident theo Metrics → Traces → Logs, tổng hợp evidence, hoàn thiện báo cáo và chuẩn bị demo. | Chưa cập nhật | Chưa cập nhật |
 | Nguyễn Hữu Huy — 2A202601220 | Vai trò hỗ trợ — QA, Integration & Evidence: chạy full test và validators, kiểm tra log/evidence không chứa PII hoặc secret, rà soát liên kết REPORT và hỗ trợ tích hợp trước demo. | Chưa cập nhật | Chưa cập nhật |
