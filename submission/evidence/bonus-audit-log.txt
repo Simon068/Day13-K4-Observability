@@ -1,0 +1,15 @@
+Audit Log evidence — 2026-08-11
+
+Runtime configuration and cost-spike control events were written to the
+separate, ignored runtime file `data/audit.jsonl`:
+
+{"service":"audit","event":"runtime_config_loaded","payload":{"tracing_enabled":true,"cost_optimization_enabled":"true","max_output_tokens":"120"}}
+{"service":"audit","event":"incident_enabled","payload":{"name":"cost_spike"}}
+{"service":"audit","event":"incident_disabled","payload":{"name":"cost_spike"}}
+
+The API check while `cost_spike` was enabled returned:
+
+{"tokens_out":120,"cost_usd":0.001881,"incident_disabled":true}
+
+No secret, raw prompt, user ID, email, phone number, or card number is stored
+in this evidence file.

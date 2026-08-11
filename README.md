@@ -99,3 +99,4 @@ Một người có thể giữ hai vai trò khi nhóm ít người; không tách
 - Không có Langfuse key, app vẫn chạy bằng prompt local nhưng bạn không có bằng chứng trace/prompt version để lấy trọn điểm.
 - `validate_logs.py` chỉ là kiểm tra kỹ thuật nhanh, không phải điểm cuối cùng.
 - Không commit `.env`, API key, `.venv/` hoặc log chứa dữ liệu nhạy cảm.
+- Xem [docs/BONUS.md](docs/BONUS.md) nếu làm bonus Cost Optimization hoặc Audit Log.

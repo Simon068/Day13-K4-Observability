@@ -4,7 +4,7 @@
 
 - Tên nhóm: Debugging
 - Repository URL: https://github.com/Simon068/Day13-K4-Observability
-- Commit đối chiếu evidence: `b17adc4` (repository được nộp/chấm tại commit `main` mới nhất).
+- Commit kiểm chứng cuối: `e7e6a26` (QA chạy pipeline sạch); repository được nộp/chấm tại commit `main` mới nhất.
 - Thành viên và vai trò:
   - Nguyễn Phú Quang — 2A202602017 — Role 1: Logging & PII (CP1).
   - Nguyễn Đại Quân — 2A202601933 — Role 2: Tracing & Prompt Versioning.
@@ -64,4 +64,9 @@ Với mỗi thành viên, ghi rõ nhiệm vụ và link commit/PR tương ứng.
 | Nguyễn Đại Quân — 2A202601933 | Role 2 — CP2 Tracing & Prompt Versioning: Cấu hình Langfuse SDK US Cloud, đính kèm trace metadata (`prompt_name`, `prompt_label`, `prompt_version`, `prompt_source`), tạo prompt `day13-chat` Version 1 (`production`/`baseline`) và Version 2 (`candidate`), thực hiện thử nghiệm rollback label và thu thập 45 root traces. | Commits `63cbdb4`, `abf3735`, `11977fa` | Nắm vững quy trình LLM Tracing và Prompt Lifecycle Management; cách gắn metadata phiên bản prompt vào từng trace để phục vụ audit/rollback; cách sử dụng Langfuse Waterfall Tracing để phân tích latency từng span (`retrieval` vs `generation`). |
 | Trần Tuấn Linh — 2A202601612 | Role 3 — Hoàn thiện SLO, 3 alert rules, runbook và dashboard 6 panel; xác nhận bằng dashboard validator. | Commit `0f69b0e` | Biết chuyển SLO thành dashboard contract có ngưỡng đo được, thiết kế alert theo symptom và viết runbook có thể thao tác. |
 | Trần Kiên — 2A202601598 | Role 4 — Chạy challenge chính thức, điều tra Metrics → Traces → Logs, bổ sung span `retrieval`, tổng hợp evidence và hoàn thiện báo cáo/demo. | Commits `6345954`, `b17adc4` | Biết dùng cùng một correlation ID để nối metric bất thường với log, rồi xác nhận dependency chậm bằng trace waterfall. |
-| Nguyễn Hữu Huy — 2A202601220 | Vai trò hỗ trợ — QA, Integration & Evidence: dựng lại môi trường sạch (Python 3.11), chạy lại `load_test.py`, `validate_logs.py`, `validate_dashboard.py` và `pytest -q` để xác nhận độc lập; kiểm tra `data/logs.jsonl` thật để xác nhận PII được redact chứ không chỉ qua validator; rà soát `git ls-files`/`submission/` để xác nhận không lộ `.env`, secret hay PII trước khi nộp. Evidence: `submission/evidence/qa-verification.md`. | Commit QA verification pass (xem lịch sử Git nhánh `main`, sau `2cab2ad`). | Hiểu checklist xác minh log, dashboard, evidence; cách kiểm tra PII redaction trên dữ liệu thật thay vì chỉ tin vào score của validator; cách rà soát Git để không lộ secret trước khi nộp. |
+| Nguyễn Hữu Huy — 2A202601220 | Vai trò hỗ trợ — QA, Integration & Evidence: dựng lại môi trường sạch (Python 3.11), chạy lại `load_test.py`, `validate_logs.py`, `validate_dashboard.py` và `pytest -q` để xác nhận độc lập; kiểm tra `data/logs.jsonl` thật để xác nhận PII được redact chứ không chỉ qua validator; rà soát `git ls-files`/`submission/` để xác nhận không lộ `.env`, secret hay PII trước khi nộp. Evidence: `submission/evidence/qa-verification.md`. | Commit `e7e6a26` | Hiểu checklist xác minh log, dashboard, evidence; cách kiểm tra PII redaction trên dữ liệu thật thay vì chỉ tin vào score của validator; cách rà soát Git để không lộ secret trước khi nộp. |
+
+## 8. Bonus: Audit Log và Cost Optimization
+
+- **Audit Log:** `app.audit.write_audit_event()` ghi JSONL append-only, đã sanitize PII, tại `AUDIT_LOG_PATH` (mặc định `data/audit.jsonl`). API ghi `runtime_config_loaded`, `incident_enabled` và `incident_disabled`. Evidence runtime đã redact: `submission/evidence/bonus-audit-log.txt`.
+- **Cost Optimization:** Fake LLM hỗ trợ `COST_OPTIMIZATION_ENABLED=true` và `MAX_OUTPUT_TOKENS=120`. Khi bật `cost_spike`, output token được cap ở 120; kiểm tra runtime ghi nhận `tokens_out=120`, `cost_usd=0.001881`. Hướng dẫn thu thập ảnh metric before/after cho bonus Cost nằm tại `docs/BONUS.md`.
