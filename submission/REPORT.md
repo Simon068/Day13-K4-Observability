@@ -46,13 +46,13 @@
 
 ## 6. Điều tra challenge
 
-- Challenge ID:
-- Triệu chứng từ metrics:
-- Trace ID liên quan:
-- Log line/correlation ID liên quan:
-- Root cause:
-- Fix action:
-- Preventive measure:
+- Challenge ID: `day13-k4-observability-v1` (incident được release: `rag_slow`, feature ảnh hưởng: `monitoring`).
+- Triệu chứng từ metrics: Sau 5 request challenge chạy đồng thời, traffic = 5; P50 = 3457ms, P95/P99 = 3511ms. P95 vượt ngưỡng challenge 2000ms và ngưỡng alert latency 3000ms; error breakdown rỗng, nên đây là degradation về latency chứ không phải request failure.
+- Trace liên quan: Lọc Langfuse bằng `session_id=k4-challenge-s02` rồi lưu Trace ID và waterfall vào evidence trước khi nộp. Code đã tạo tool span `retrieval` để waterfall khoanh vùng thời gian RAG mà không capture input/output.
+- Log line/correlation ID liên quan: `req-2b31b06b` — `request_received` lúc `2026-08-11T09:49:46.326230Z` và `response_sent` lúc `2026-08-11T09:49:49.732682Z`, `latency_ms=3403`, cùng session `k4-challenge-s02`. Chi tiết được lưu tại `submission/evidence/challenge-investigation.md`.
+- Root cause: Incident chính thức `rag_slow` làm `app.mock_rag.retrieve()` sleep 2.5 giây trước khi trả documents. Vì không có error, latency tăng đồng loạt trên 5 request challenge.
+- Fix action: Đã tắt incident qua endpoint `/incidents/rag_slow/disable`; health check xác nhận `rag_slow=false`. Thêm span `retrieval` để lần điều tra sau xác định được đoạn chậm trực tiếp trong waterfall.
+- Preventive measure: Theo dõi alert `high_latency_p95`, đặt timeout/circuit breaker cho retriever và dùng cache cho corpus ổn định; alert sẽ dẫn người trực tới runbook và trace `retrieval` trước khi ảnh hưởng lan rộng.
 
 ## 7. Đóng góp cá nhân
 
@@ -63,5 +63,5 @@ Với mỗi thành viên, ghi rõ nhiệm vụ và link commit/PR tương ứng.
 | Nguyễn Phú Quang — 2A202602017 | Role 1 — CP1 Logging/PII: structured JSON logging, correlation ID middleware, log enrichment (`user_id_hash`, `session_id`, `feature`, `model`, `env`) và PII redaction cho email, phone VN, CCCD, credit card, passport, IP. | Commit `7c6b5b4` | Hiểu cách dùng structlog/contextvars để propagate correlation ID và PII scrubber trong logging pipeline. |
 | Nguyễn Đại Quân — 2A202601933 | Role 2 — CP2 Tracing & Prompt Versioning: Cấu hình Langfuse SDK US Cloud, đính kèm trace metadata (`prompt_name`, `prompt_label`, `prompt_version`, `prompt_source`), tạo prompt `day13-chat` Version 1 (`production`/`baseline`) và Version 2 (`candidate`), thực hiện thử nghiệm rollback label và thu thập 45 root traces. | Commit `63cbdb4` / `abf3735` | Nắm vững quy trình LLM Tracing và Prompt Lifecycle Management; cách gắn metadata phiên bản prompt vào từng trace để phục vụ audit/rollback; cách sử dụng Langfuse Waterfall Tracing để phân tích latency từng span (`retrieval` vs `generation`). |
 | Trần Tuấn Linh — 2A202601612 | Role 3 — Hoàn thiện SLO, 3 alert rules, runbook và dashboard 6 panel; xác nhận bằng dashboard validator. | Commit `CP3 eval complete` | Biết chuyển SLO thành dashboard contract có ngưỡng đo được, thiết kế alert theo symptom và viết runbook có thể thao tác. |
-| Trần Kiên — 2A202601598 | Role 4 — Điều tra incident theo Metrics → Traces → Logs, tổng hợp evidence, hoàn thiện báo cáo và chuẩn bị demo. | Chưa cập nhật | Chưa cập nhật |
+| Trần Kiên — 2A202601598 | Role 4 — Chạy challenge chính thức, điều tra Metrics → Traces → Logs, bổ sung span `retrieval`, tổng hợp evidence và hoàn thiện báo cáo/demo. | Commit `update Cp4` | Biết dùng cùng một correlation ID để nối metric bất thường với log, rồi xác nhận dependency chậm bằng trace waterfall. |
 | Nguyễn Hữu Huy — 2A202601220 | Vai trò hỗ trợ — QA, Integration & Evidence: chạy full test và validators, kiểm tra log/evidence không chứa PII hoặc secret, rà soát liên kết REPORT và hỗ trợ tích hợp trước demo. | Chưa cập nhật | Chưa cập nhật |
