@@ -6,4 +6,10 @@ data/logs.jsonl
 data/audit.jsonl
 .env
 .pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.streamlit/secrets.toml
+Thumbs.db
 .antigravity/

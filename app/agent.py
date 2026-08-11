@@ -29,7 +29,7 @@ class LabAgent:
     @observe(as_type="generation", capture_input=False, capture_output=False)
     def run(self, user_id: str, feature: str, session_id: str, message: str) -> AgentResult:
         started = time.perf_counter()
-        docs = retrieve(message)
+        docs = self._retrieve(message)
         langfuse_client = get_langfuse_client()
         prompt = resolve_prompt(
             langfuse_client,
@@ -89,6 +89,11 @@ class LabAgent:
             cost_usd=cost_usd,
             quality_score=quality_score,
         )
+
+    @observe(name="retrieval", as_type="tool", capture_input=False, capture_output=False)
+    def _retrieve(self, message: str) -> list[str]:
+        """Create a safe trace span around RAG retrieval for incident analysis."""
+        return retrieve(message)
 
     def _estimate_cost(self, tokens_in: int, tokens_out: int) -> float:
         input_cost = (tokens_in / 1_000_000) * 3

@@ -36,81 +36,81 @@ def load_dashboard_config(path: Path) -> dict:
     try:
         payload = yaml.safe_load(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
-        raise DashboardConfigError(f"Không tìm thấy dashboard config: {path}") from exc
+        raise DashboardConfigError(f"Dashboard config not found: {path}") from exc
     except yaml.YAMLError as exc:
-        raise DashboardConfigError(f"Dashboard config không phải YAML hợp lệ: {exc}") from exc
+        raise DashboardConfigError(f"Dashboard config is not valid YAML: {exc}") from exc
 
     dashboard = payload.get("dashboard") if isinstance(payload, dict) else None
     if not isinstance(dashboard, dict):
-        raise DashboardConfigError("Thiếu object 'dashboard'")
+        raise DashboardConfigError("Missing 'dashboard' object")
     if dashboard.get("schema_version") != 1:
-        raise DashboardConfigError("'dashboard.schema_version' phải bằng 1")
+        raise DashboardConfigError("'dashboard.schema_version' must equal 1")
     if dashboard.get("time_range_minutes") != 60:
-        raise DashboardConfigError("'dashboard.time_range_minutes' phải bằng 60")
+        raise DashboardConfigError("'dashboard.time_range_minutes' must equal 60")
     refresh_seconds = dashboard.get("refresh_seconds")
     if not isinstance(refresh_seconds, int) or not 15 <= refresh_seconds <= 30:
-        raise DashboardConfigError("'dashboard.refresh_seconds' phải nằm trong khoảng 15–30")
+        raise DashboardConfigError("'dashboard.refresh_seconds' must be between 15 and 30")
 
     panels = dashboard.get("panels")
     if not isinstance(panels, list) or len(panels) != 6:
-        raise DashboardConfigError("Dashboard phải có đúng 6 panel")
+        raise DashboardConfigError("Dashboard must contain exactly 6 panels")
     panel_ids = {
         panel.get("id") for panel in panels if isinstance(panel, dict) and panel.get("id")
     }
     if panel_ids != REQUIRED_PANEL_IDS:
-        missing = ", ".join(sorted(REQUIRED_PANEL_IDS - panel_ids)) or "không"
-        extra = ", ".join(sorted(panel_ids - REQUIRED_PANEL_IDS)) or "không"
+        missing = ", ".join(sorted(REQUIRED_PANEL_IDS - panel_ids)) or "none"
+        extra = ", ".join(sorted(panel_ids - REQUIRED_PANEL_IDS)) or "none"
         raise DashboardConfigError(
-            f"Panel ID không đúng; thiếu: {missing}; không hỗ trợ: {extra}"
+            f"Invalid panel IDs; missing: {missing}; unsupported: {extra}"
         )
 
     for panel in panels:
         if not isinstance(panel, dict):
-            raise DashboardConfigError("Mỗi dashboard panel phải là một YAML object")
+            raise DashboardConfigError("Each dashboard panel must be a YAML object")
         panel_id = panel["id"]
         for field in REQUIRED_PANEL_FIELDS:
             if panel.get(field) in (None, "", []):
-                raise DashboardConfigError(f"Thiếu hoặc rỗng: {panel_id}.{field}")
+                raise DashboardConfigError(f"Missing or empty: {panel_id}.{field}")
         if not all(isinstance(panel[field], list) for field in ("events", "fields", "aggregations")):
             raise DashboardConfigError(
-                f"'{panel_id}.events/fields/aggregations' phải là danh sách"
+                f"'{panel_id}.events/fields/aggregations' must be lists"
             )
 
         threshold = panel["threshold"]
         if not isinstance(threshold, dict):
-            raise DashboardConfigError(f"'{panel_id}.threshold' phải là một YAML object")
+            raise DashboardConfigError(f"'{panel_id}.threshold' must be a YAML object")
         if threshold.get("aggregation") not in panel["aggregations"]:
             raise DashboardConfigError(
-                f"'{panel_id}.threshold.aggregation' phải thuộc aggregations của panel"
+                f"'{panel_id}.threshold.aggregation' must be one of the panel aggregations"
             )
         if threshold.get("operator") not in {"lte", "gte"}:
             raise DashboardConfigError(
-                f"'{panel_id}.threshold.operator' chỉ nhận 'lte' hoặc 'gte'"
+                f"'{panel_id}.threshold.operator' must be 'lte' or 'gte'"
             )
         if not isinstance(threshold.get("value"), (int, float)):
-            raise DashboardConfigError(f"'{panel_id}.threshold.value' phải là một số")
+            raise DashboardConfigError(f"'{panel_id}.threshold.value' must be numeric")
 
     return payload
 
 
 def main() -> int:
     configure_utf8_stdio()
-    parser = argparse.ArgumentParser(description="Kiểm tra dashboard contract của Day 13")
+    parser = argparse.ArgumentParser(description="Validate the Day 13 dashboard contract")
     parser.add_argument(
         "--config",
         type=Path,
         default=REPO_ROOT / "config" / "dashboard.yaml",
-        help="Đường dẫn tới dashboard YAML",
+        help="Path to dashboard YAML",
     )
     args = parser.parse_args()
 
     try:
         load_dashboard_config(args.config)
     except DashboardConfigError as exc:
-        print(f"KHÔNG HỢP LỆ: {exc}")
+        print(f"INVALID: {exc}")
         return 1
 
-    print(f"HỢP LỆ: {len(REQUIRED_PANEL_IDS)}/6 panel có trong dashboard contract.")
+    print(f"VALID: {len(REQUIRED_PANEL_IDS)}/6 required panels are present in the dashboard contract.")
     return 0
 
 
