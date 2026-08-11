@@ -57,7 +57,7 @@ Với mỗi thành viên, ghi rõ nhiệm vụ và link commit/PR tương ứng.
 
 | Thành viên | Phần việc | Commit/PR | Điều đã học |
 |---|---|---|---|
-| Nguyễn Phú Quang — 2A202602017 | Role 1 — Hoàn thiện correlation ID, enrich log context, JSON logging và PII redaction trong `app/main.py`, `app/middleware.py`, `app/logging_config.py`, `app/pii.py`; xác nhận bằng `validate_logs.py`. | Chưa cập nhật | Chưa cập nhật |
+| Nguyễn Phú Quang — 2A202602017 | Role 1 — CP1 Logging/PII: structured JSON logging, correlation ID middleware, log enrichment (`user_id_hash`, `session_id`, `feature`, `model`, `env`) và PII redaction cho email, phone VN, CCCD, credit card, passport, IP. | Chưa cập nhật | Hiểu cách dùng structlog/contextvars để propagate correlation ID và PII scrubber trong logging pipeline. |
 | Nguyễn Đại Quân — 2A202601933 | Role 2 — Thiết lập tracing, tạo evidence tối thiểu 10 traces, prompt v1/v2, label và rollback trên Langfuse. | Chưa cập nhật | Chưa cập nhật |
 | Trần Tuấn Linh — 2A202601612 | Role 3 — Hoàn thiện SLO, 3 alert rules, runbook và dashboard 6 panel; xác nhận bằng dashboard validator. | Chưa cập nhật | Chưa cập nhật |
 | Trần Kiên — 2A202601598 | Role 4 — Điều tra incident theo Metrics → Traces → Logs, tổng hợp evidence, hoàn thiện báo cáo và chuẩn bị demo. | Chưa cập nhật | Chưa cập nhật |
