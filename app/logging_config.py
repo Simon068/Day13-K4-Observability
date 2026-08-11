@@ -22,20 +22,22 @@ class JsonlFileProcessor:
         return event_dict
 
 
+def _scrub_value(value: Any) -> Any:
+    """Recursively redact PII before a log event is rendered to JSON."""
+    if isinstance(value, str):
+        return scrub_text(value)
+    if isinstance(value, dict):
+        return {key: _scrub_value(item) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_scrub_value(item) for item in value]
+    if isinstance(value, tuple):
+        return tuple(_scrub_value(item) for item in value)
+    return value
+
+
 def scrub_event(_: Any, __: str, event_dict: dict[str, Any]) -> dict[str, Any]:
-    """Scrub PII from all string values in the log event."""
-    payload = event_dict.get("payload")
-    if isinstance(payload, dict):
-        event_dict["payload"] = {
-            k: scrub_text(v) if isinstance(v, str) else v for k, v in payload.items()
-        }
-    if "event" in event_dict and isinstance(event_dict["event"], str):
-        event_dict["event"] = scrub_text(event_dict["event"])
-    # Also scrub any other top-level string fields that could contain PII
-    for key in ("detail", "error_type", "message"):
-        if key in event_dict and isinstance(event_dict[key], str):
-            event_dict[key] = scrub_text(event_dict[key])
-    return event_dict
+    """Scrub PII from every string value in a log event."""
+    return {key: _scrub_value(value) for key, value in event_dict.items()}
 
 
 def configure_logging() -> None:

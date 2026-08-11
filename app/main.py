@@ -28,6 +28,7 @@ async def startup() -> None:
         "app_started",
         service=os.getenv("APP_NAME", "day13-observability-lab"),
         env=os.getenv("APP_ENV", "dev"),
+        correlation_id="system-startup",
         payload={"tracing_enabled": tracing_enabled()},
     )
 

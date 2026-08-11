@@ -27,11 +27,13 @@ class CorrelationIdMiddleware(BaseHTTPMiddleware):
         request.state.correlation_id = correlation_id
 
         start = time.perf_counter()
-        response = await call_next(request)
+        try:
+            response = await call_next(request)
 
-        # Add the correlation_id and processing time to response headers
-        elapsed_ms = round((time.perf_counter() - start) * 1000, 2)
-        response.headers["x-request-id"] = correlation_id
-        response.headers["x-response-time-ms"] = str(elapsed_ms)
-
-        return response
+            # Add the correlation_id and processing time to response headers
+            elapsed_ms = round((time.perf_counter() - start) * 1000, 2)
+            response.headers["x-request-id"] = correlation_id
+            response.headers["x-response-time-ms"] = str(elapsed_ms)
+            return response
+        finally:
+            clear_contextvars()
